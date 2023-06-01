@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pro_mit/core/theme/colors/colors.dart';
+import 'package:pro_mit/features/home/bloc/clinic_bloc/clinic_bloc.dart';
+import 'package:pro_mit/features/home/model/clinic_input_model.dart';
 import 'package:pro_mit/features/home/presentation/pages/add_clinic_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -106,17 +109,28 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 16.h),
-                  Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: 5,
-                      itemBuilder: (context, index) {
-                        return const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: CardWidget(),
+                  BlocBuilder(
+                    bloc: context.read<ClinicBloc>(),
+                    builder: (context, state) {
+                      if (context.read<ClinicBloc>().data.isEmpty) {
+                        return const Center(child: Text('No clinics'));
+                      } else {
+                        return Expanded(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: context.read<ClinicBloc>().data.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: CardWidget(
+                                    model:
+                                        context.read<ClinicBloc>().data[index]),
+                              );
+                            },
+                          ),
                         );
-                      },
-                    ),
+                      }
+                    },
                   ),
                 ],
               ),
@@ -217,8 +231,10 @@ class SubTitleTextWidget extends StatelessWidget {
 }
 
 class CardWidget extends StatelessWidget {
+  final ClinicInputModel model;
   const CardWidget({
     super.key,
+    required this.model,
   });
 
   @override
@@ -243,12 +259,12 @@ class CardWidget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'My Clinics',
+                    model.clinicName,
                     style:
                         TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400),
                   ),
                   Text(
-                    'Dentist',
+                    model.speciality,
                     style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
