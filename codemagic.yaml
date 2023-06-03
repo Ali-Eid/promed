@@ -8,13 +8,13 @@ workflows:
     instance_type: mac_mini_m1
     max_build_duration: 60
     environment:
-      groups:             
+      groups:
         - keystore_credentials
         - app_store_credentials
         - manual_cert_credentials
         - firebase_credentials
         - other
-      vars:		
+      vars:
         PUBLIC_ENV_VAR: "value here"
       flutter: stable   
       xcode: latest    
