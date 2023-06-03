@@ -20,8 +20,6 @@ workflows:
       ruby: 2.7.2      
 
     cache:
-      cache_paths:
-        - ~/.pub-cache
       branch_patterns:
         - pattern: '*'
           include: true
