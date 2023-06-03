@@ -1,134 +1,71 @@
 workflows:
-  android-workflow:
-    name: Android Workflow
-    instance_type: mac_mini_m1
-    max_build_duration: 120
-
-
+  work-flow1:
+    name: build apk 
     scripts:
-      - name: Set up local.properties
-        script: |
-          echo "flutter.sdk=$HOME/programs/flutter" > "$CM_BUILD_DIR/android/local.properties"
-      - name: Get Flutter packages
-        script: |
-          flutter packages pub get
-
-      - name: Flutter unit tests
-        script: |
-          flutter test
-        ignore_failure: true
-      - name: Build AAB with Flutter
-        script: |
-          flutter build apk --release
-    artifacts:
-      - build/app/outputs/flutter-apk/proMed.apk
-      - build/app/outputs/flutter-apk/mapping.txt
-      - flutter_drive.log
-    publishing:
-      email:
-        recipients:
-          - alieid19961996@gmail.com
-        notify:
-          success: true
-          failure: false
-
-  ios-workflow:
-    name: iOS Workflow
+        - echo "Hello World!"
+    labels:
+      - QA
+      - ${TENANT_NAME}
     instance_type: mac_mini_m1
-    max_build_duration: 120
-    integrations:
-      app_store_connect: codemagic
+    max_build_duration: 60
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: io.codemagic.flutteryaml
-      vars:
-        APP_ID: 1111111111 # <-- Put your APP ID here
-      flutter: stable
-      xcode: latest
-      cocoapods: default
+      groups:             # Define your environment variables groups here
+    - keystore_credentials
+    - app_store_credentials
+    - manual_cert_credentials
+    - firebase_credentials
+    - other
+      vars:		# Define your environment variables here
+        PUBLIC_ENV_VAR: "value here"
+      flutter: stable   # Define the channel name, version (e.g. v1.13.4), or fvm for Flutter Version Management
+      xcode: latest     # Define latest, edge or version (e.g. 11.2)
+      cocoapods: 1.9.1  # Define default or version
+      node: 12.14.0     # Define default, latest, current, lts, carbon (or another stream), nightly or version
+      npm: 6.13.7       # Define default, latest, next, lts or version
+      ndk: r21d         # Define default or revision (e.g. r19c)
+      java: 1.8         # Define default, or platform version (e.g. 11)
+      ruby: 2.7.2       # Define default or version
+
+    cache:
+      cache_paths:
+        - ~/.pub-cache
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: '*'
+          include: true
+          source: true
+      cancel_previous_builds: false
     scripts:
-      - name: Set up code signing settings on Xcode project
-        script: |
-          xcode-project use-profiles
-      - name: Get Flutter packages
-        script: |
-          flutter packages pub get
-      - name: Install pods
-        script: |
-          find . -name "Podfile" -execdir pod install \;
-      - name: Flutter analyze
-        script: |
-          flutter analyze
-      - name: Flutter unit tests
-        script: |
-          flutter test
+      - echo "single line script"
+      - name: Flutter test
+        script: flutter test
         ignore_failure: true
-      - name: Flutter build ipa and automatic versioning
-        script: |
-          flutter build ipa --release \
-            --build-name=1.0.0 \
-            --build-number=$(($(app-store-connect get-latest-app-store-build-number "$APP_ID") + 1)) \
-            --export-options-plist=/Users/builder/export_options.plist
+      - | 
+        #!/usr/bin/env python3
+
+        print('Multiline python script')
+      - name: Build for iOS
+        script: flutter build ios
+      - name: Build for Android
+        script: flutter build apl --release
     artifacts:
+      - build/**/outputs/apk/**/*.apk
+      - build/**/outputs/**/*.aab
+      - build/**/outputs/**/mapping.txt
       - build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log
       - flutter_drive.log
-    publishing:
-      # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
-      email:
-        recipients:
-          - alieid19961996@gmail.com
-        notify:
-          success: true # To receive a notification when a build succeeds
-          failure: false # To not receive a notification when a build fails
-      slack:
-        # See the following link about how to connect your Slack account - https://docs.codemagic.io/publishing-yaml/distribution/#slack
-        channel: "#builds"
-        notify_on_build_start: true # To receive a notification when a build starts
-        notify:
-          success: true # To receive a notification when a build succeeds
-          failure: false # To not receive a notification when a build fails
-      app_store_connect:
-        auth: integration
-        
-        # Configuration related to TestFlight (optional)
-        # Note: This action is performed during post-processing.
-        submit_to_testflight: true
-        beta_groups: # Specify the names of beta tester groups that will get access to the build once it has passed beta review.
-          - group name 1
-          - group name 2
 
-        # Configuration related to App Store (optional)
-        # Note: This action is performed during post-processing.
-        submit_to_app_store: false
-
-  web-workflow:
-    name: Web app workflow
-    max_build_duration: 10
-    environment:
-      flutter: stable
-    scripts:
-      - name: Get Flutter packages
-        script: |
-          flutter packages pub get
-      - name: Flutter analyze
-        script: |
-          flutter analyze
-      - name: Flutter unit tests
-        script: |
-          flutter test
-      - name: Flutter build webapp
-        script: |
-          flutter build web --release
-          cd build/web
-          7z a -r ../web.zip ./*
-    artifacts:
-      - build/web.zip
-      - flutter_drive.log
     publishing:
       email:
         recipients:
           - alieid19961996@gmail.com
-
-
+      scripts:
+        - name: Report build status
+        script: | 
+          if [ -a "~/SUCCESS" ] ; then
+           # build successful
+          else
+           # build failed
+          fi
