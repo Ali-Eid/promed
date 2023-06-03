@@ -36,6 +36,5 @@ workflows:
     artifacts:
       - app/build/outputs/testCICD.apk
     environment:
-      ndk: r23k
       flutter: stable
       java: 1.8
