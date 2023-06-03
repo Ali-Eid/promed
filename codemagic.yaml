@@ -1,5 +1,10 @@
 workflows:
   my-workflow:
+    publishing:
+      email:
+        recipients:
+          - alieid19961996@gmail.com
+
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache  
