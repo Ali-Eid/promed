@@ -1,0 +1,41 @@
+workflows:
+  my-workflow:
+    triggering:
+      events:
+        - push
+      branch_patterns: 
+        - pattern: develop
+          include: false
+      cancel_previous_builds: true
+
+    publishing:
+      email:
+        recipients:
+          - alieid19961996@gmail.com
+
+    scripts:
+      - name: say hello
+        script: echo "Hello Codemagician!"
+      - name: Launch emulator
+        script: |
+          set -e # exit on first failed command
+
+          cd $ANDROID_HOME/tools
+          emulator -avd emulator &
+          adb wait-for-device
+      - name: Run unit tests
+        script: ./gradlew test
+        test_report: app/build/testCICD.xml
+      - name: Build Android App Bundle
+        working_directory: android
+        script: ./gradlew bundleRelease
+      - name: Build Android APK
+        working_directory: android
+        script: ./gradlew assembleRelease
+
+    artifacts:
+      - app/build/outputs/testCICD.apk
+    environment:
+      ndk: r23k
+      flutter: stable
+      java: 1.8
