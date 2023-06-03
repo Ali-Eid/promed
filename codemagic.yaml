@@ -12,9 +12,6 @@ workflows:
         GOOGLE_PLAY_TRACK: alpha
       flutter: stable
     scripts:
-      - name: Set up local.properties
-        script: | 
-          echo "flutter.sdk=$HOME/programs/flutter" > "$CM_BUILD_DIR/android/local.properties"
       - name: Get Flutter packages
         script: | 
           flutter packages pub get
@@ -38,8 +35,8 @@ workflows:
     publishing:
       email:
         recipients:
-          - user_1@example.com
-          - user_2@example.com
+          - ali.eid19961996@gmail.com
+          
         notify:
           success: true
           failure: false
