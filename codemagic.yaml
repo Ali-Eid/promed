@@ -16,17 +16,16 @@ workflows:
     scripts:
       - name: say hello
         script: echo "Hello Codemagician!"
-     
-        
-      - name: Run unit tests
-        script: ./gradlew test
-        test_report: app/build/testCICD.xml
+
       - name: Build Android App Bundle
         working_directory: android
         script: ./gradlew bundleRelease
       - name: Build Android APK
         working_directory: android
         script: ./gradlew assembleRelease
+      - name: Run unit tests
+        script: ./gradlew test
+        test_report: app/build/testCICD.xml
 
     artifacts:
       - app/build/outputs/testCICD.apk
