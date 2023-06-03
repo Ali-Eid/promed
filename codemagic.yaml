@@ -17,13 +17,7 @@ workflows:
 
     scripts:
       - echo "single line script"
-      - name: Flutter test
-        script: flutter test
-        ignore_failure: true
-      - | 
-        #!/usr/bin/env python3
 
-        print('Multiline python script')
       - name: Build for iOS
         script: flutter build ios
       - name: Build for Android
