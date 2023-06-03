@@ -16,8 +16,6 @@ workflows:
 
 
     scripts:
-      - echo "single line script"
-
       - name: Build for iOS
         script: flutter build ios
       - name: Build for Android
