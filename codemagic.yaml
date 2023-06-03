@@ -19,12 +19,7 @@ workflows:
       java: 1.8         
       ruby: 2.7.2      
 
-    cache:
-      branch_patterns:
-        - pattern: '*'
-          include: true
-          source: true
-      cancel_previous_builds: false
+
     scripts:
       - echo "single line script"
       - name: Flutter test
