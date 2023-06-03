@@ -3,7 +3,7 @@ workflows:
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache  
-    instance_type: mac_pro
+
     scripts:
       - name: say hello
         script: echo "Hello Codemagician!"
