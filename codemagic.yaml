@@ -1,13 +1,32 @@
 workflows:
   my-workflow:
-    triggering:
-      events:
-        - push
-      branch_patterns: 
-        - pattern: develop
-          include: false
-      cancel_previous_builds: true
+    environment:
+      flutter: stable
+      java: 1.8
     scripts:
+      - name: Install dependencies
+        script: npm ci
+      - name: Switch to a specific version of Cordova
+        script: |
+          set -e # exit on first failed command
+          
+          cvm install 9.0.0
+          cvm use 9.0.0
+      - name: Add Android platform
+        script: |
+          set -e # exit on first failed command
+
+          cordova platform remove android --nosave
+          cordova platform add android --confirm --no-interactive --noresources
+      - name: Build Android release
+        script: |
+          set -e # exit on first failed command
+
+          cordova build android --no-interactive
+    
+      - name: Build Android App Bundle
+        working_directory: android
+        script: ./gradlew bundleRelease
       - name: Build Android APK
         working_directory: android
         script: ./gradlew assembleRelease
@@ -44,6 +63,4 @@ workflows:
         recipients:
           - alieid19961996@gmail.com
 
-    environment:
-      flutter: stable
-      java: 1.8
+
