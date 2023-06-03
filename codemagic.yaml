@@ -17,12 +17,7 @@ workflows:
       - name: say hello
         script: echo "Hello Codemagician!"
       - name: Launch emulator
-        script: |
-          set -e # exit on first failed command
-
-          cd $ANDROID_HOME/tools
-          emulator -avd emulator &
-          adb wait-for-device
+        
       - name: Run unit tests
         script: ./gradlew test
         test_report: app/build/testCICD.xml
