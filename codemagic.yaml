@@ -10,11 +10,11 @@ workflows:
     max_build_duration: 60
     environment:
       groups:             # Define your environment variables groups here
-    - keystore_credentials
-    - app_store_credentials
-    - manual_cert_credentials
-    - firebase_credentials
-    - other
+      	- keystore_credentials
+      	- app_store_credentials
+       	- manual_cert_credentials
+    	  - firebase_credentials
+    	  - other
       vars:		# Define your environment variables here
         PUBLIC_ENV_VAR: "value here"
       flutter: stable   # Define the channel name, version (e.g. v1.13.4), or fvm for Flutter Version Management
