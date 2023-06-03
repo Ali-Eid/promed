@@ -1,66 +1,17 @@
 workflows:
   my-workflow:
-    environment:
-      flutter: stable
-      java: 1.8
+    cache:
+      cache_paths:
+        - $FLUTTER_ROOT/.pub-cache  
+    instance_type: mac_pro
     scripts:
-      - name: Install dependencies
-        script: npm ci
-      - name: Switch to a specific version of Cordova
-        script: |
-          set -e # exit on first failed command
-          
-          cvm install 9.0.0
-          cvm use 9.0.0
-      - name: Add Android platform
-        script: |
-          set -e # exit on first failed command
-
-          cordova platform remove android --nosave
-          cordova platform add android --confirm --no-interactive --noresources
-      - name: Build Android release
-        script: |
-          set -e # exit on first failed command
-
-          cordova build android --no-interactive
-    
-      - name: Build Android App Bundle
-        working_directory: android
-        script: ./gradlew bundleRelease
+      - name: say hello
+        script: echo "Hello Codemagician!"
+        
       - name: Build Android APK
         working_directory: android
-        script: ./gradlew assembleRelease
-   
-      - name: Add provisioning profiles
-        script: |
-          set -e # exit on first failed command
-
-          PROFILES_HOME="$HOME/Library/MobileDevice/Provisioning Profiles"
-          mkdir -p "$PROFILES_HOME"
-          echo ${PROVISIONING_PROFILE?} | base64 --decode > "$PROFILES_HOME/$(uuidgen).mobileprovision"
-      - name: Add signing certificate
-        script: |
-          set -e # exit on first failed command
-
-          echo ${CERTIFICATE?} | base64 --decode > /tmp/certificate.p12
-          keychain initialize
-          keychain add-certificates \
-              --certificate /tmp/certificate.p12 \
-              --certificate-password ${CERTIFICATE_PASSWORD?}
-      - name: Increment build number
-        script: agvtool new-version -all $BUILD_NUMBER
-      - name: Set up code signing settings on Xcode project
-        script: xcode-project use-profiles
-      - name: Build ipa for distribution
-        script: xcode-project build-ipa \
-                    --workspace "${XCODE_WORKSPACE?}" \
-                    --scheme "${XCODE_SCHEME?}"
+        script: flutter build apk --release
     artifacts:
-      - app/build/outputs/proMed.apk
-      - build/ios/ipa/proMed.ipa
-    publishing:
-      email:
-        recipients:
-          - alieid19961996@gmail.com
-
-
+      - app/build/outputs/test.apk     
+    environment:
+      flutter: stable
