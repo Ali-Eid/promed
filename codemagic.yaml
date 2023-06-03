@@ -8,16 +8,11 @@ workflows:
         - manual_cert_credentials
         - firebase_credentials
         - other
-      vars:
-        PUBLIC_ENV_VAR: "value here"
+
       flutter: stable   
       xcode: latest    
       cocoapods: 1.9.1  
-      npm: 6.13.7   
-      node: 12.14.0         
-      ndk: r21d         
-      java: 1.8         
-      ruby: 2.7.2      
+     
 
 
     scripts:
