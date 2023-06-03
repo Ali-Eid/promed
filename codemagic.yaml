@@ -1,9 +1,6 @@
 workflows:
   work-flow1:
     name: build apk 
-
-
-    max_build_duration: 60
     environment:
       groups:
         - keystore_credentials
