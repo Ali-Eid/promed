@@ -22,9 +22,6 @@ workflows:
     cache:
       cache_paths:
         - ~/.pub-cache
-    triggering:
-      events:
-        - push
       branch_patterns:
         - pattern: '*'
           include: true
