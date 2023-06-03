@@ -54,11 +54,4 @@ workflows:
       email:
         recipients:
           - alieid19961996@gmail.com
-      scripts:
-       - name: Report build status
-         script: | 
-          if [ -a "~/SUCCESS" ] ; then
-           # build successful
-          else
-           # build failed
-          fi
+
