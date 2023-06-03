@@ -16,7 +16,7 @@ workflows:
     scripts:
       - name: say hello
         script: echo "Hello Codemagician!"
-      - name: Launch emulator
+     
         
       - name: Run unit tests
         script: ./gradlew test
