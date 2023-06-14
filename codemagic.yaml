@@ -1,34 +1,30 @@
 workflows:
-  android-workflow:
-    name: Android Workflow
-    max_build_duration: 120
+  flutter_build:
+    name: Flutter Build
     environment:
-
-      vars:
-        PACKAGE_NAME: "io.codemagic.fluttersample"
-        GOOGLE_PLAY_TRACK: alpha
       flutter: stable
-    scripts:
-      - name: Get Flutter packages
-        script: | 
-          flutter packages pub get
+      xcode: latest
 
-      - name: Build AAB with Flutter
-        script: | 
-          BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))      
-          flutter build appbundle --release \
-            --build-name=1.0.$BUILD_NUMBER \
-            --build-number=$BUILD_NUMBER
+    scripts:
+      - name: Install dependencies
+        script: flutter pub get
+
+      - name: Run tests
+        script: flutter test
+
+      - name: Build Android APK
+        script: flutter build apk
+
+      - name: Build iOS IPA
+        script: flutter build ios --no-codesign
+
     artifacts:
-      - build/**/outputs/**/*.aab
-      - build/**/outputs/**/mapping.txt
-      - flutter_drive.log
+      - build/app/outputs/apk/release/app-release.apk
+      - build/ios/ipa/Runner.ipa
+
     publishing:
       email:
         recipients:
-          - ali.eid19961996@gmail.com
-          
-        notify:
-          success: true
-          failure: false
+          - alieid19961996@gmail.com
 
+    
