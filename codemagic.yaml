@@ -16,7 +16,7 @@ workflows:
         script: flutter build apk
 
       - name: Build iOS IPA
-        script: flutter build ios --no-codesign
+        script: flutter build ios --release --no-codesign
 
     artifacts:
       - build/app/outputs/apk/release/app-release.apk
